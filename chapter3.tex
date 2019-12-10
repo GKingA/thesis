@@ -1,8 +1,10 @@
 %----------------------------------------------------------------------------
 \chapter{Models}\label{sect:Models}
 %----------------------------------------------------------------------------
+In this chapter I will introduce the models I experimented with. Encode Process Decode model has been defined in the graph\_nets demos. The SimpleGraphAttention and the GraphAttention models are defined by me.
+
 \section{Encode Process Decode model}
-This model has been tested and used in the demos provided on GitHub.
+This model has been tested and used in the demos provided on \href{https://github.com/deepmind/graph_nets/blob/master/graph_nets/demos/models.py}{GitHub}\footnote{\url{https://github.com/deepmind/graph_nets/blob/master/graph_nets/demos/models.py}}.
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=150mm, keepaspectratio]{figures/EPD.png}
@@ -24,7 +26,7 @@ This section of the network is repeated resulting in a hidden state that gets fe
 The decoder model has the same structure as the encoder. It does not use any kind of activation on the last layer, which enables it to better generalization, but also making it harder to use on a specific project eq. classifying whether or not the summary graph contains the given node or edge.
 
 \section{SimpleGraphAttention model}
-This model is highly inspired by the Encode Process Decode model, but it is better suited for NLP problems as you can see on Figure~\ref{fig:graph-attention0}.
+I based this model architecture on the Encode Process Decode model, but it is better suited for NLP problems as you can see on Figure~\ref{fig:graph-attention0}.
 
 \begin{figure}[!ht]
 	\centering
@@ -35,7 +37,7 @@ This model is highly inspired by the Encode Process Decode model, but it is bett
 
 \subsection{Encoder}
 
-The encoder is made up of two Embedding layers one for the nodes' lemmas and one for the edges' relation type (See Figure~\ref{fig:graph-attention0-encoder}). The second one's necessity is questionable, since it does not contain as much information and could be also represented with a simple one-hot encoded vector, since it has not as high dimensionality as the nodes. However I decided I leave it in the model and make it a changeable parameter of the network.
+The encoder is made up of two Embedding layers one for the nodes' lemmas and one for the edges' relation type (See Figure~\ref{fig:graph-attention0-encoder}). 
 
 \begin{figure}[!ht]
 	\centering
@@ -44,9 +46,9 @@ The encoder is made up of two Embedding layers one for the nodes' lemmas and one
 	\label{fig:graph-attention0-encoder}
 \end{figure}
 
-For the global features I only used a simple linear layer without activation functions, since it does not need to be encoded in any way.
+The second one's necessity is questionable, since it does not contain as much information and could be also represented with a simple one-hot encoded vector, since it has not as high dimensionality as the nodes. However I decided I leave it in the model and make it a changeable parameter of the network.
 
-All of these blocks work independently from each other, updating their respective blocks.
+For the global features I only used a simple linear layer without activation functions, since it does not need to be encoded in any way. All of these blocks work independently from each other, updating their respective blocks, because the parts are defined as the edge, node and global functions for a GraphIndependent block.
 
 \subsection{Network}
 
@@ -73,7 +75,7 @@ The decoder part of the model is also graph independent just like the encoder an
 \end{figure}
 
 \section{GraphAttention model}
-The starting point of this model was the \textit{SimpleGraphAttention} model which was further developed using recent advancements regarding attention in graphs. There was two versions of this model, one that used LSTM cells in the Network part in the node block, and the other that used only linear layers. Since the main structure is the same I only included the graphical presentation on Figure~\ref{fig:graph-attention1} and Figure~\ref{fig:graph-attention1-network} of the later version. This one proved to be more usable due to the large amount of memory usage of the LSTM cells.
+The starting point of this model was the \textit{SimpleGraphAttention} model which I further developed using recent advancements regarding attention in graphs. There was two versions of this model, one that used LSTM cells in the Network part in the node block, and the other that used only linear layers. Since the main structure is the same I only included the graphical presentation on Figure~\ref{fig:graph-attention1} and Figure~\ref{fig:graph-attention1-network} of the later version. This one proved to be more usable due to the large amount of memory usage of the LSTM cells.
 
 \begin{figure}[!ht]
 	\centering

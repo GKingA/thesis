@@ -3,7 +3,8 @@
 %----------------------------------------------------------------------------
 
 \section{Neural Networks}
-Artificial neural networks are used for various machine learning and deep learning purposes. In this section I will introduce the basic concepts of the field of artificial neural networks.
+Artificial neural networks are used for various machine learning and deep learning purposes. In this section I will introduce the basic concepts of artificial neural networks used for supervised learning. Supervised learning is the process of neural network training with a given set of inputs and desired outputs and the goal is to train that system to predict the target outputs with the least error possible.
+
 Most of the contents of this section is from the paper written by \'Ad\'am Kov\'acs and I for the Scientific Students' Associations conference in 2018 \cite{SemParse}.
 
 \subsection{Perceptron}
@@ -59,11 +60,21 @@ Where \(\eta\) is the learning rate.
 
 The learning rate parameter can also change during the training process. This is called optimization. The main goal of it is to overcome the problems with setting the learning rate (too high can cause us to jump over any good solution, too low results in very slow learning and settling in a local minimum).
 
-One such optimization method is called Adam. It is a cross between two other methods: Adaptive learning rate and Momentum. The basic idea is slowly degrading the learning rate, based on the previous gradient.
+One such optimization method is called Adam. It is a cross between two other methods: Adaptive learning rate and Momentum. I used it for the training the models described in the next chapter. The basic idea is slowly degrading the learning rate, based on the previous gradient.
 
 \subsection{Embedding layers}
 
-The function of embedding layers is to turn integer values to fixed length vectors. They are used mostly in natural language processing to work as word2vec translation.
+The function of embedding layers is to turn values to fixed length vectors. They are used mostly in natural language processing to work as word2vec translation. Word2vec is the mechanism to translate a word into vector space.\cite{Word2Vec}
+
+Word embeddings are used in basically all state-of-the art systems related to
+natural language processing applications. Mikolov\cite{Mikolov:2013x} showed that word embeddings can be applied for vector operations, like addition or subtraction, and these operations often result in meaningful representation. If we have example words "King", "Man", "Woman", then the vector("King") - vector("Man") + vector("Woman") will most likely result in vector that is close to vector("Queen") in the embedding space. See Figure~\ref{fig:worvec}.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[scale=0.75, keepaspectratio]{figures/vecs.png}
+	\caption{An word vector operations.}
+	\label{fig:worvec}
+\end{figure}
 
 When using embedding layers we want to find vectors for each word so that it can model the word's meaning. We achieve this by looking at the context, the word usually appears in. If two words like \textit{apple} and \textit{orange} usually appear in the same context, than the vectors assigned to these words should have low cosine distance between them.
 
@@ -78,11 +89,13 @@ If you are building an NLP model, the embedding layer should be in the first lay
 
 The input dimension of this layer is the size of the vocabulary and the output dimension is the size of the dense vector. Usually the vocabulary size greatly exceeds the embedding dimension since the output vectors size is fixed and can range from 300 to 1000, and the vocabulary - depending on the dataset - can be way higher than that. See at Figure~\ref{fig:embedding_layer}.
 
-They work mostly like a lookup table that can be trained. A lot of the times we use pretrained models, like the GloVe embeddings that have been trained on enormous datasets. We can also train them on our specific problem, or use the pretrained and our own embeddings simultaneously.
+They work mostly like a lookup table that can be trained. A lot of the times we use pretrained models, like the GloVe embeddings\cite{GloVe} that have been trained on enormous datasets. We can also train them on our specific problem, or use the pretrained and our own embeddings simultaneously.
 
 There has been a huge step forward on this field with the appearance of pre-trained embeddings built from language models. The first such embedding is ELMo \cite{ELMo} which is a deep-contextualized word representation capable to handle character level features as well as the context of a given word.
 
 \subsection{Recurrent Neural Networks}
+
+RNNs~\cite{RNN} can be used in supervised and also unsupervised learning. They are used when the data is sequential, like text, audio, etc.
 
 \begin{figure}[!ht]
 	\centering
@@ -110,10 +123,8 @@ The gradient vanishing or explosion can be a problem with this RNN.
 
 There is a multitude of solutions for the exploding gradients, one of which is called gradient clipping. This technique is a very simple yet powerful way of dealing with exploding gradients. All it does is that it limits the size of the gradient, if its norm is higher than a set threshold.
 
-RNNs can be used in supervised and also unsupervised learning. They are used when the data is sequential, like text, audio, etc.
-
 \subsubsection{Long-Short Term Memory}
-Long-short term memory networks are the extension of the previously discussed recurrent neural network. The main difference is that it also has an internal long term memory. Usually these type of networks are more reluctant to have the exploding gradient problem.
+Long-short term memory networks\cite{LSTM} are the extension of the previously discussed recurrent neural network. The main difference is that it also has an internal long term memory. Usually these type of networks are more reluctant to have the exploding gradient problem.
 
 Like the simple RNN, LSTMs also have hidden states, that are calculated slightly differently.
 \\
@@ -171,6 +182,8 @@ The attention based model is at Figure~\ref{fig:attention}.
 
 
 \section{The graph\_nets library}
+As I mentioned in the previous chapter graph neural networks are used for graph transformation. Recently an article has been published about the types and possible uses of graph neural networks\cite{SurveyGNN}.  Graph neural networks are used on the field of physics\cite{PhysicsGNN}, computer vision\cite{CVGNN} and also NLP\cite{NLPGNN} but they are still not common.\footnote{\url{https://github.com/thunlp/GNNPapers}}
+
 My main source for understanding the mechanisms of the graph\_nets library was the article titled \textit{Relational inductive biases, deep learning, and graph networks}\cite{GraphNet} and the \href{https://github.com/deepmind/graph_nets/tree/master/graph_nets/demos}{demos} available on GitHub.
 The article explains the different approaches of graph transformation learning, most importantly the graph independent model and the graph dependent models.
 
@@ -179,6 +192,7 @@ The most notable difference between the two is the fact that while the graph dep
 Both models can be used under different circumstances, but the can also be used together in training processes.
 
 \subsection{Graph Network block}
+
 The graph\_nets library contains three different block type: EdgeBlock, NodeBlock and GlobalBlock. Each responsible for the propagation of the corresponding tensor through the right function. So we can construct different models for edges, nodes and global parameters.
 
 \textbox{
