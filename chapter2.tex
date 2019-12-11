@@ -62,6 +62,8 @@ The learning rate parameter can also change during the training process. This is
 
 One such optimization method is called Adam. It is a cross between two other methods: Adaptive learning rate and Momentum. I used it for the training the models described in the next chapter. The basic idea is slowly degrading the learning rate, based on the previous gradient.
 
+The backpropagation method can result in under-fitting, when the results are not getting close to the expected and over-fitting, when the results on the training set look promising, but on the test set they are not getting better, and start to worsen after a while. To prevent over-fitting we can use early-stopping which will stop the training if the results on the test set are getting worse. I used early-stopping in my solution as well.
+
 \subsection{Embedding layers}
 
 The function of embedding layers is to turn values to fixed length vectors. They are used mostly in natural language processing to work as word2vec translation. Word2vec is the mechanism to translate a word into vector space.\cite{Word2Vec}

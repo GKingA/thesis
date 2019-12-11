@@ -41,14 +41,13 @@ At first I tried to get the Encode-Process-Decode model to predict whether to pu
 
 I also experimented with different loss functions, but for now i decided to use softmax cross entropy with output feature sizes of 2.
 
-Training on more, than 7000 articles for 5 epochs (Early stopping stopped it from running any longer) I've got the following results.
+Training on more, than 7000 articles for 5 epochs (Early stopping stopped it from running any longer). I've got the following results.
 \begin{table}[!h]
 	\centering
 	\begin{tabular}{| c | c |}
 		\hline
 		Test loss & 0.447 \\ \hline
 		Test accuracy over nodes and edges & 0.958 \\ \hline
-		Test accuracy over full graphs & 0.0 \\ \hline
 	\end{tabular}
 	\caption{Softmax cross entropy loss and accuracy on the test set}
 \end{table}
@@ -81,7 +80,6 @@ I evaluated the trained network on the test set and the results are the followin
 		\hline
 		Test loss & 0.809 \\ \hline
 		Test accuracy over nodes and edges& 0.724 \\ \hline
-		Test accuracy over full graphs & 0.0 \\ \hline
 	\end{tabular}
 	\caption{Softmax cross entropy loss and accuracy on the test set}
 \end{table}
@@ -274,6 +272,77 @@ To better visualize the results I compare the summary graph from Chapter~\ref{se
 	\caption{Example article summaries}}
 
 \subsection{GraphAttention Network}
+
+I trained this model on ten-thousand data for 3 epochs. In each epoch the network trained on different data, all in all I used thirty-thousand input and target output. It stopped after the third epoch because of the early stopping mechanism.
+
+Due to time constraints I was unable to train the network on the whole training data.
+
+I evaluated the trained network and the results are the following:
+
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{| c | c |}
+		\hline
+		Test loss & 0.7996 \\ \hline
+		Test accuracy over nodes and edges& 0.685 \\ \hline
+	\end{tabular}
+	\caption{Softmax cross entropy loss and accuracy on the test set}
+\end{table}
+
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{| c | c | c | c |}
+		\hline
+		& precision & recall & f1 \\ \hline \hline
+		nodes labeled 0 & 0.851 & 0.711 & 0.775 \\ \hline
+		nodes labeled 1 & 0.431 & 0.638 & 0.514 \\ \hline
+	\end{tabular}
+	\caption{The classification report on the test set. Nodes and edges labeled 1 are the ones that were in the summary.}
+\end{table}
+
+\subsubsection{Summary reconstruction and evaluation}
+I tried the same reconstruction method for the results of the GraphAttention model. Keep in mind that this model has been trained for less time and on less data.
+
+\paragraph{Reconstruction with the graph structure and the node scores}
+
+\begin{longtable}{| l | l | l | l | l |}
+	\hline
+	\textbf{Evaluation method}&\textbf{Metric}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-1}}
+	&Average Recall&0.56020&0.56350&0.73912 \\
+	&Average Precision&0.20580&0.20366&0.33846 \\ 
+	&Average F1&0.29006&0.28692&0.44619 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-2}}
+	&Average Recall&0.21028&0.20801&0.39292 \\
+	&Average Precision&0.07823&0.07546&0.18290 \\
+	&Average F1&0.10951&0.10587&0.23900 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-3}}
+	&Average Recall&0.11300&0.11009&0.246448 \\
+	&Average Precision&0.04297&0.04068&0.11801 \\
+	&Average F1&0.05954&0.05656&0.15226 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-4}}
+	&Average Recall&0.07278&0.07074&0.17230 \\
+	&Average Precision&0.02831&0.02666&0.08483 \\
+	&Average F1&0.03881&0.04157&0.10807 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-L}}
+	&Average Recall&0.34276&0.34467&0.51007 \\
+	&Average Precision&0.12238&0.12093&0.23272 \\
+	&Average F1&0.17356&0.17149&0.30654 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-W-1.2}}
+	&Average Recall&0.12889&0.12907&0.19517 \\
+	&Average Precision&0.09510&0.09360&0.18583 \\
+	&Average F1&0.10214&0.10068&0.17739 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-S*}}
+	&Average Recall&0.27247&0.27925&.48162 \\
+	&Average Precision&0.04199&0.04148&0.11587 \\
+	&Average F1&0.07070&0.06623&0.16621 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-SU*}}
+	&Average Recall&0.28611&0.29271&0.49149 \\
+	&Average Precision&0.04453&0.04401&0.12013 \\
+	&Average F1&0.07028&0.06914&0.17242 \\ \hline
+	\caption{ROUGE scores on the test set with reconstruction method using both graph structure and the node scores}
+\end{longtable}
+
 \subsubsection{Example}
 Similarly to the previous case I compared the summary graph from Chapter~\ref{sect:DataProcessing} (Figure~\ref{fig:usain_summary_graph} and) to the calculated graph (Figure~\ref{fig:usain_bolt_predicted1}). The generated summaries are also written below.
 
