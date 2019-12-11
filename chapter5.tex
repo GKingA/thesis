@@ -1,14 +1,10 @@
 %----------------------------------------------------------------------------
 \chapter{Conclusion and future work}\label{sect:Future}
 %----------------------------------------------------------------------------
-In my opinion we only started to explore the possibilities of this technique in the realms of natural language processing research and there are still a lot of open questions.
+In my opinion we only started to explore the possibilities of this technique in the realms of natural language processing research and there are still a lot of open questions. The results show that this model trained on the extracted summaries can achieve higher ROUGE score than the benchmark gensim TextRank based algorithm.
 
-The results show that this model trained on the extracted summaries can achieve higher ROUGE score than the benchmark gensim TextRank based algorithm.
+My plans for the future include further experimenting with the optimization, modifying the graph attention, and trying out new summary reconstruction methods and new structures.
 
-My plans for the future include further experiments with the optimization, graph attention modifications and new structures.
+Modifications of the graph attention layer may include taking into account the edge types in some way because the current one only accounts for the node connectivity. I might reintroduce a modified edge loss for the training process but experiments are needed to determine whether it would be beneficial for the network, since previous iterations suggested otherwise.
 
-Modifications of the graph attention layer may include taking into account the edge types in some way because the current one only accounts for the node connectivity.
-
-I might reintroduce a modified edge loss for the training process but experiments are needed to determine whether it would be beneficial for the network, since previous iterations suggested otherwise.
-
-In conclusion I think there is room for further development and this research area is highly promising.
+In conclusion I think there is room for further development and this research area is highly promising. I would like to delve into graph neural networks even more now that I've come to know them better.

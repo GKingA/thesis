@@ -303,6 +303,50 @@ I evaluated the trained network and the results are the following:
 \subsubsection{Summary reconstruction and evaluation}
 I tried the same reconstruction method for the results of the GraphAttention model. Keep in mind that this model has been trained for less time and on less data.
 
+\paragraph{Reconstruction with the node average}
+
+\begin{longtable}{| l | l | l | l | l |}
+	\hline
+	\textbf{Evaluation method}&\textbf{Metric}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline		
+	\multirow{3}{*}{\textbf{ROUGE-1}}
+	&Average Recall&0.39460&0.56350&0.73912 \\
+	&Average Precision&0.23954&0.20366&0.33846 \\ 
+	&Average F1&0.27885&0.28692&0.44619 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-2}}
+	&Average Recall&0.12990&0.20801&0.39292 \\
+	&Average Precision&0.07425&0.07546&0.18290 \\
+	&Average F1&0.08856&0.10587&0.23900 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-3}}
+	&Average Recall&0.06800&0.11009&0.246448 \\
+	&Average Precision&0.03847&0.04068&0.11801 \\
+	&Average F1&0.04603&0.05656&0.15226 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-4}}
+	&Average Recall&0.04386&0.07074&0.17230 \\
+	&Average Precision&0.02510&0.02666&0.08483 \\
+	&Average F1&0.02981&0.03671&0.10807 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-L}}
+	&Average Recall&0.24389&0.34467&0.51007 \\
+	&Average Precision&0.14485&0.12093&0.23272 \\
+	&Average F1&0.16932&0.17149&0.30654 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-W-1.2}}
+	&Average Recall&0.09364&0.12907&0.19517 \\
+	&Average Precision&0.11479&0.09360&0.18583 \\
+	&Average F1&0.09367&0.10068&0.17739 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-S*}}
+	&Average Recall&0.14858&0.27925&.48162 \\
+	&Average Precision&0.05401&0.04148&0.11587 \\
+	&Average F1&0.06483&0.06513&0.16621 \\ \hline \hline
+	\multirow{3}{*}{\textbf{ROUGE-SU*}}
+	&Average Recall&0.16041&0.29271&0.49149 \\
+	&Average Precision&0.05944&0.04401&0.12013 \\
+	&Average F1&0.06957&0.07100&0.17242 \\ \hline
+	\caption{ROUGE scores on the test set with reconstruction method using only the node scores}
+\end{longtable}
+
+\paragraph{Reconstruction with just the graph structure}
+
+The result is the same as before, since we only consider the graph structures and they haven't changed.
+
 \paragraph{Reconstruction with the graph structure and the node scores}
 
 \begin{longtable}{| l | l | l | l | l |}
