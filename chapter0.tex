@@ -2,34 +2,30 @@
 \chapter{Background}\label{sect:Background}
 %----------------------------------------------------------------------------
 \section{Summarization}
-Summarization is the task of text shortening with the least amount of information loss. Being able to do this automatically and with nearly human level accuracy is a challenge to this date but its usefulness is undeniable especially in the news industry where there is a constant supply of new articles and writing a summary for each of them would be a waste of resources if there would be another way of summarizing them.
+Summarization is the task of text shortening with the least amount of information loss. Being able to do this automatically and with nearly human level accuracy is a challenge to this date but its usefulness is undeniable especially in the news industry where is a constant supply of new articles and writing a summary for each of them would be a waste of resources if there would be another way of summarizing them.
 
 We can distinguish between two approaches of this problem, abstractive and extractive summarization, both interesting and challenging. These are described in the following subsections.
 
 \subsection{Abstractive summarizaton}
-Summaries written by humans are usually free-form, not a word-by-word or sentence-by-sentence cut outs from the article.
+Summaries written by humans are usually free-form, not a word-by-word or sentence-by-sentence cut outs from the article. The goal of abstractive summarization is to construct the summaries in a similar fashion, being creative with its word and expression choice so the end summary is as sound and as readable as any summary written by a person.
 
-The goal of abstractive summarization is to construct the summaries in a similar fashion, being creative with its word choice so the end summary is as sound and as readable as any summary written by a person.
+This poses multiple difficulties because the system not only has to figure out what is important in an article but also has to construct grammatically correct sentences that are at the same time semantically sound and actually a good summary of the article without false information added.
 
-This poses multiple difficulties because the system not only has to figure out what is important in an article but also has to construct grammatically correct sentences and are at the same time semantically sound and are actually a good summary of the article.
+This is a hard compared to the extractive approach but recently there have been some breakthroughs with end-to-end seq2seq neural network models. The first breakthrough was in 2017 in the article titled Get To The Point: Summarization with Pointer-Generator Networks~\cite{AbstractiveSum}. And had since been developed further in Mixture Content Selection for Diverse Sequence Generation~\cite{DiverseAbstract} and Unified Language Model Pre-training for Natural Language Understanding and Generation~\cite{UniLM}.
 
-This is a hard compared to the extractive approach but recently there have been some breakthroughs with end-to-end seq2seq neural networks.
-
-The first breakthrough was in 2017 in the article titled Get To The Point: Summarization with Pointer-Generator Networks~\cite{AbstractiveSum}. And had since been developed further in Mixture Content Selection for Diverse Sequence Generation~\cite{DiverseAbstract} and Unified Language Model Pre-training for Natural Language Understanding and Generation~\cite{UniLM}. However it is important to note that the outputs of these networks are far from human-written level, they can contain factual falsehoods so they are not in use yet.
+However it is important to note that the outputs of these networks are far from human-written level, they can contain factual falsehoods and incorrect grammar so they are not yet applied on real life problems.
 
 \subsection{Extractive summarization}
-Extractive summarization is an easier approach to the problem of summarization because it just chooses the expressions or sentences to keep from the original text.
-
-One could think of this as highlighting the most important information in a text.
+Extractive summarization is an easier approach to the problem of summarization because it just chooses the expressions or sentences to keep from the original text. One could think of this as highlighting the most important information in a text.
 
 The mayor advantage of extractive summarization is the fact that there is no need to paraphrase anything from the original text, but the downside is that the maximum achievable ROUGE score is limited by the sentences of the text.
 
-I've decided to choose this approach for my thesis but it's important to mention, that on its own my Graph Neural Network model could be used for abstractive summarizationas well, but it would be much more complicated because it would involve splitting the end graph into smaller sentence-sized graphs and than construct textual data from these smaller UD graphs. The former would on its own be a challenge and the latter part is still an unsolved problem on the field.
+I've decided to choose this approach for my thesis but it's important to mention, that on its own the Graph Neural Network model could be used for abstractive summarization as well, although it would be much more complicated because it would involve splitting the end graph into smaller sentence-sized graphs and than construct textual data from these smaller UD graphs. The former would on its own be a challenge and the latter part is still an unsolved problem on the field of NLP\footnote{\url{https://www.aclweb.org/portal/content/announcement-surface-realization-shared-task-2019}}.
 
 \section{Evaluation}
 In general we want our generated summary to be as similar to the reference summaries as possible. For this we are looking at the number and length of overlaps between them.
 
-The goal is to find a metric that judges the generated summaries similarly to a human would judge the summary. That being said automatic metrics are limited by the reference summaries and will score a sound, good summary lower if they are not matching the reference enough.
+The goal is to find a metric that judges the generated extracted summaries similarly to a human would judge the summary. That being said automatic metrics are limited by the reference summaries and will score a sound, good summary lower if they are not matching the reference well.
 
 \subsection{BLEU score}
 The BLEU~\cite{BLEU} score was first introduced as an automatic evaluation tool for machine translation in 2002 but it has been used for a multitude of problems on the field of Natural Language Processing.
@@ -41,11 +37,11 @@ BLEU is a precision oriented measure, calculated by the following equation.
 This metric is rarely used for summary evaluation, it is more useful for machine translation problems.
 
 \subsection{ROUGE score}
-The ROUGE score metric has been developed in 2004 by Chin-Yew Lin~\cite{ROUGE}. ROUGE is short for Recall-Oriented Understudy for Gisting Evaluation. The metric is used to determine the quality of a generated summary by comparing it to a set of human written summaries. It yields similar results to human intuition, especially ROUGE-2 correlates the best as it was shown in \textit{Re-evaluating Automatic Summarization with BLEU and 192 Shades of ROUGE}~\cite{ShadesOfROUGE}. ROUGE-1 and ROUGE-L are the metrics most used.
+The ROUGE score metric has been developed in 2004 by Chin-Yew Lin~\cite{ROUGE}. ROUGE is short for Recall-Oriented Understudy for Gisting Evaluation. The metric is used to determine the quality of a generated summary by comparing it to a set of human written summaries. It yields similar results to human intuition, especially ROUGE-2, which correlates the best as it was shown in \textit{Re-evaluating Automatic Summarization with BLEU and 192 Shades of ROUGE}~\cite{ShadesOfROUGE}. ROUGE-1 and ROUGE-L are the metrics most used in scientific publications.
 
-\textbf{ROUGE-N} is the ROUGE measure over n-grams. An n-gram is an expression from the text with length n.
+\textbf{ROUGE-N} is the ROUGE measure over n-grams. An n-gram is an expression from the text with n number of words.
 
-In contrast to the BLEU score which is a precision score, the ROUGE-N scores are the recall of the candidate summaries.
+In contrast to the BLEU score which is a precision oriented score, the ROUGE-N scores are the recall of the candidate summaries.
 
 \[ROUGE-N = \frac{\sum_{S \in ReferenceSummaries}\sum_{n\_gram \in S} Count_{match} (n\_grams)}{\sum_{S \in ReferenceSummaries}\sum_{n\_gram \in S} Count(n\_grams)}\]
 
@@ -63,7 +59,7 @@ If n is 1, the ROUGE score is simply the number of matching words divided by the
 
 Where LCS is a function returning the length of the longest common subsequence and \(\beta = \frac{Precision_{lcs}}{Recall_{lcs}}\)
 
-\textbf{ROUGE-W} uses the weighted longest common subsequence method instead of the simple \textit{LCS} that prefers consecutive matches so the weighting function scores them higher.
+\textbf{ROUGE-W} uses the weighted longest common subsequence method instead of the simple \textit{LCS} so that it prefers consecutive matches and the weighting function scores them higher.
 
 \textbf{ROUGE-S} is a Skip-Bigram Co-Occurrence Statistic. Skip-bigrams are any pair of words in the article, allowing for gaps between them. Skip-bigram co-occurrence statistics measure the overlap of skip-bigrams between a candidate summary and a set of reference summaries.
 
@@ -75,7 +71,7 @@ Although the ROUGE-S allows skips in the matches but it is still sensitive to wo
 
 \textbf{ROUGE-SU} is an expansion over the ROUGE-S metric adding a unigram feature to it to account for single word matches.
 
-It is important ot note that comparing systems based on their respective ROUGE score is only meaningful if the summaries generated are the same or similar length. Otherwise the longer summary will naturally achieve higher score.
+It is important ot note that comparing systems based on their respective ROUGE score is only meaningful if the compared summaries are the same or similar length. Otherwise the longer summary will naturally achieve higher score.
 
 \section{Previous work}
 The summmarization is a long standing task. There have been multiple attempts at solving this problem.
