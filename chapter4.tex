@@ -95,10 +95,10 @@ For fair comparison I generated shorter TextRank based gensim summaries and cut 
 		\hline
 		\textbf{Evaluation method}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline
 		\textbf{average word count}&75.97&77.01&74.14 \\ \hline
-		\textbf{ROUGE-1}&39.06&41.77& \\ \hline
-		\textbf{ROUGE-2}&12.56&14.08& \\ \hline
-		\textbf{ROUGE-L}&24.03&25.99& \\ \hline
-		\textbf{ROUGE-SU*}&15.60&17.34& \\ \hline
+		\textbf{ROUGE-1}&39.06&41.77&59.11 \\ \hline
+		\textbf{ROUGE-2}&12.56&14.08&29.95 \\ \hline
+		\textbf{ROUGE-L}&24.03&25.99&40.66 \\ \hline
+		\textbf{ROUGE-SU*}&15.60&17.34&33.73 \\ \hline
 	\end{tabular}
 	\caption{ROUGE scores on the test set with reconstruction method using only the node scores}
 \end{table}
@@ -213,10 +213,10 @@ The average number of words in a four sentence long summary is 75.65.
 	\hline
 	\textbf{Evaluation method}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline
 	\textbf{average word count}&75.65&77.01&74.14 \\ \hline
-	\textbf{ROUGE-1}&39.46&41.77& \\ \hline
-	\textbf{ROUGE-2}&12.99&14.08& \\ \hline
-	\textbf{ROUGE-L}&24.39&25.99& \\ \hline
-	\textbf{ROUGE-SU*}&16.04&17.34& \\ \hline
+	\textbf{ROUGE-1}&39.46&41.77&59.11 \\ \hline
+	\textbf{ROUGE-2}&12.99&14.08&29.95 \\ \hline
+	\textbf{ROUGE-L}&24.39&25.99&40.66 \\ \hline
+	\textbf{ROUGE-SU*}&16.04&17.34&33.73 \\ \hline
 	\end{tabular}
 	\caption{ROUGE scores on the test set with reconstruction method using only the node scores}
 \end{table}
@@ -278,7 +278,7 @@ Similarly to the previous case I compared the summary graph from Chapter~\ref{se
 	Germany's Christina Obergfoll finally took gold at global level in the women's javelin after five previous silvers, while Kenya's Asbel Kiprop easily won a tactical men's 1500m final.}{}
 \FloatBarrier
 
-\section{Comparison}
+\section{Comparison between models}
 
 Table~\ref{tab:short} contains the comparable ROUGE scores of the SimpleGraphAttention model's and the GraphAttention model's summaries reconstructed with the node average method and also the TextRank based benchmark method's output followed by the maximum achievable ROUGE scores with the adequate summary lengths.
 
@@ -288,10 +288,10 @@ Table~\ref{tab:short} contains the comparable ROUGE scores of the SimpleGraphAtt
 		\hline
 		\textbf{Metric}&\textbf{Simple node avg}&\textbf{Attended node avg}&\textbf{Gensim}&\textbf{Extracted} \\ \hline \hline
 		\textbf{avg words}&75.97&75.65&77.01&74.14 \\ \hline
-		\textbf{ROUGE-1}&39.06&39.46&41.77& \\ \hline
-		\textbf{ROUGE-2}&12.56&12.99&14.08& \\ \hline
-		\textbf{ROUGE-L}&24.03&24.39&25.99& \\ \hline
-		\textbf{ROUGE-SU*}&15.60&16.04&17.34& \\ \hline
+		\textbf{ROUGE-1}&39.06&39.46&41.77&59.11 \\ \hline
+		\textbf{ROUGE-2}&12.56&12.99&14.08&29.95 \\ \hline
+		\textbf{ROUGE-L}&24.03&24.39&25.99&40.66 \\ \hline
+		\textbf{ROUGE-SU*}&15.60&16.04&17.34&33.73 \\ \hline
 	\end{tabular}
 	\caption{Short summary comparisons}
 	\label{tab:short}
