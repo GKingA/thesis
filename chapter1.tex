@@ -59,88 +59,36 @@ It's important to note, that it is not a summarization method, it only gives us 
 	\caption{Greedy summarization algorithm}
 \end{algorithm}
 
-\begin{longtable}{| l | l | l |}
-	\hline
-	\textbf{Evaluation method}&\textbf{Metric}&\textbf{Score}\\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-1}}
-	&Average Recall&0.73912\\
-	&Average Precision&0.33846 \\
-	&Average F1&0.44619 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-2}}
-	&Average Recall&0.39292 \\
-	&Average Precision&0.18290 \\
-	&Average F1&0.23900 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-3}}
-	&Average Recall&0.24648 \\
-	&Average Precision&0.11801 \\
-	&Average F1&0.15226 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-4}}
-	&Average Recall&0.17230 \\
-	&Average Precision&0.08483 \\
-	&Average F1&0.10807 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-L}}
-	&Average Recall&0.51007 \\
-	&Average Precision&0.23272 \\
-	&Average F1&0.30654 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-W-1.2}}
-	&Average Recall&0.19517 \\
-	&Average Precision&0.18583 \\
-	&Average F1&0.17739 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-S*}}
-	&Average Recall&0.48162 \\
-	&Average Precision&0.11587 \\
-	&Average F1&0.16621 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-SU*}}
-	&Average Recall&0.49349 \\
-	&Average Precision&0.12013 \\
-	&Average F1&0.17242 \\ \hline
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{| l | l |}
+		\hline
+		\textbf{Evaluation method}&\textbf{Score}\\ \hline \hline
+		\textbf{ROUGE-1}&73.91\\ \hline
+		\textbf{ROUGE-2}&39.29 \\ \hline
+		\textbf{ROUGE-L}&51.01 \\ \hline
+		\textbf{ROUGE-SU*}&49.35 \\ \hline
+	\end{tabular}
 	\caption{ROUGE scores of the top 4 sentences chosen by the naive greedy algorithm over the test set of the CNN-Daily Mail data}
 	\label{tab:extr}
-\end{longtable}
-As the table~\ref{tab:extr} shows this method works surprisingly well.
-
-There have been some advancement of this method regarding its speed\cite{GreedySum}.
+\end{table}
+As the table~\ref{tab:extr} shows this method works surprisingly well. There have been some advancement of this method regarding its speed\cite{GreedySum}.
 
 \subsection{Gensim Benchmark}
 As I mentioned before, I used the gensim TextRank based summarization method's output as my benchmark for my model evaluation.
-\begin{longtable}{| l | l | l |}
-	\hline
-	\textbf{Evaluation method}&\textbf{Metric}&\textbf{Score}\\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-1}}
-	&Average Recall&0.56350 \\
-	&Average Precision&0.20366  \\
-	&Average F1&0.28692  \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-2}}
-	&Average Recall&0.20801 \\
-	&Average Precision&0.07546 \\
-	&Average F1&0.10587 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-3}}
-	&Average Recall&0.11009 \\
-	&Average Precision&0.04068 \\
-	&Average F1&0.05656 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-4}}
-	&Average Recall&0.07074 \\
-	&Average Precision&0.02666 \\
-	&Average F1&0.03671 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-L}}
-	&Average Recall&0.34467 \\
-	&Average Precision&0.12093 \\
-	&Average F1&0.17148 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-W-1.2}}
-	&Average Recall&0.12907 \\
-	&Average Precision&0.09360 \\
-	&Average F1&0.10068 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-S*}}
-	&Average Recall&0.27925 \\
-	&Average Precision&0.04148 \\
-	&Average F1&0.06513 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-SU*}}
-	&Average Recall&0.29271 \\
-	&Average Precision&0.04401 \\
-	&Average F1&0.06914 \\ \hline
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{| l | l |}
+		\hline
+		\textbf{Evaluation method}&\textbf{Score}\\ \hline \hline
+		\textbf{ROUGE-1}&56.35 \\ \hline
+		\textbf{ROUGE-2}&20.80 \\ \hline
+		\textbf{ROUGE-L}&34.47 \\ \hline
+		\textbf{ROUGE-SU*}&29.27 \\ \hline
+	\end{tabular}
 	\caption{ROUGE scores of the top 4 sentences chosen by the gensim library's TextRank variation based summarization algorithm over the test set of the CNN-Daily Mail data}
-\end{longtable}
-
+\end{table}
+\FloatBarrier
 %----------------------------------------------------------------------------
 \section{Universal Dependencies}
 %----------------------------------------------------------------------------
@@ -207,6 +155,7 @@ Although I mentioned the transformation between one graph dictionary and one Gra
 
 On the Figure \ref{fig:transform_multiple} depicting this I also applied highlighting on the nodes, edges and graph backgrounds and the corresponding feature vectors and indexes with the same color.
 
+\FloatBarrier
 %----------------------------------------------------------------------------
 \section{Building the graphs}
 %----------------------------------------------------------------------------
@@ -242,18 +191,13 @@ With this method I was able to represent an article with one big graph, like the
 	\label{fig:usain_article_graph}
 \end{figure}
 
+\FloatBarrier
 %----------------------------------------------------------------------------
 \section{Forming the target graphs}
 %----------------------------------------------------------------------------
 Like I mentioned before, I needed the target graphs to be the same format af the input graph with the summary elements marked. Initially my approach was to try to learn the summaries written by people. For this I needed to generate summary graphs, but their structure was not adequate for training any graph neural network on it. So my solution was the following: I iterated through the edges of the article graph and if the sender node, the receiver node and the edge type matched any edge in the summary I've marked them by adding a 1.0 at the end of their feature vector. Otherwise I appended a 0.0 to the vector.
 
 Similarly I iterated through the nodes as well and checked whether the same feature vector appears in the summary graph and appended 1.0 in case of successful search, 0.0 otherwise.
-
-This way I was able to achieve the same structure, but with marked summary nodes and edges.
-
-The problem with this approach was the fact, that some of the expressions used in the summary did not match up with anything from the original text so the result could not contain the same level of information as the summary graph on it's own.
-
-However the dataset contained the extracted summaries with the best possible ROUGE score and I decided to use that as the expected output of my neural network. The construction is similar to the previous one, but instead of generating an other graph and then trying to find the corresponding parts I only iterated through the ud graphs b sentences and labeled the nodes and edges in that with the right label.
 
 \begin{figure}[!ht]
 	\centering
@@ -269,4 +213,10 @@ However the dataset contained the extracted summaries with the best possible ROU
 	\label{fig:usain_summary_graph}
 \end{figure}
 
-The graphs resulting from this approach contained more information and proved better for training. On Figure \ref{fig:usain_article_graph_colored} and Figure \ref{fig:usain_summary_graph} you can see the results of the first article visualized in two different ways.
+This way I was able to achieve the same structure, but with marked summary nodes and edges.
+
+The problem with this approach was the fact, that some of the expressions used in the summary did not match up with anything from the original text so the result could not contain the same level of information as the summary graph on it's own.
+
+However the dataset contained the extracted summaries with the best possible ROUGE score and I decided to use that as the expected output of my neural network. The construction is similar to the previous one, but instead of generating an other graph and then trying to find the corresponding parts I only iterated through the ud graphs b sentences and labeled the nodes and edges in that with the right label.
+
+The graphs resulting from this approach contained more information and proved to be better for training. On Figure \ref{fig:usain_article_graph_colored} and Figure \ref{fig:usain_summary_graph} you can see the results of the first article visualized in two different ways.

@@ -1,6 +1,9 @@
 %----------------------------------------------------------------------------
 \chapter{Experiments and results}\label{sect:Experiments}
 %----------------------------------------------------------------------------
+
+In this chapter I will present my results achieved on the data. The two classes (whether to include a word or edge in the summary) appear disproportionally in the dataset. There is 2.5 times more node that we leave out from the summaries then nodes we take in and 4.8 times more edges left out than contained in the summary.
+
 \section{Evaluation methods}
 
 I used three methods to evaluate the results. The most basic method is the accuracy measure, which calculates the ratio of the correct answers as follows:
@@ -9,6 +12,8 @@ I used three methods to evaluate the results. The most basic method is the accur
 
 Since we are talking about graphs we need to measure the accuracy on the nodes and (if we are also training on them) the edges.
 \[accuracy_{nodes\ and\ edges} = \frac{correct\ nodes + correct\ edges}{all\ nodes + all\ edges}\]
+
+In our case this metric does not contain real information about the results of the model because of the high disparity between the classes.
 
 The other general evaluation metric in case of classification is the F-score. This is better for evaluating the results of a classification because it is not so greatly affected by the distribution of the classes. For this we need to calculate the true positive, true negative, false positive and false negative measures for every class. See on Figue~\ref{fig:TP_TN_FP_FN}.
 
@@ -20,10 +25,10 @@ The other general evaluation metric in case of classification is the F-score. Th
 \end{figure}
 
 
-\[TP_{node==0} = number\ of\ correctly\ guessed\ node==0\]
-\[TN_{node==0} = number\ of\ correctly\ guessed\ node!=0\]
-\[FP_{node==0} = number\ of\ incorrectly\ guessed\ node==0\]
-\[FN_{node==0} = number\ of\ incorrectly\ guessed\ node!=0\]
+\[TP_{node==1} = number\ of\ correctly\ guessed\ node==1\]
+\[TN_{node==1} = number\ of\ correctly\ guessed\ node!=1\]
+\[FP_{node==1} = number\ of\ incorrectly\ guessed\ node==1\]
+\[FN_{node==1} = number\ of\ incorrectly\ guessed\ node!=1\]
 
 With these measures we can calculate the precision and recall. The precision tells us the ratio of correct guesses of the class out of every time the model predicted that class. The recall is the ratio of the correct guesses out of every instance that are actually in the class. The harmonic mean of the precision and recall is the F-score.
 
@@ -42,28 +47,17 @@ At first I tried to get the Encode-Process-Decode model to predict whether to pu
 I also experimented with different loss functions, but for now i decided to use softmax cross entropy with output feature sizes of 2.
 
 Training on more, than 7000 articles for 5 epochs (Early stopping stopped it from running any longer). I've got the following results.
-\begin{table}[!h]
-	\centering
-	\begin{tabular}{| c | c |}
-		\hline
-		Test loss & 0.447 \\ \hline
-		Test accuracy over nodes and edges & 0.958 \\ \hline
-	\end{tabular}
-	\caption{Softmax cross entropy loss and accuracy on the test set}
-\end{table}
 
-\begin{table}[!h]
-	\centering
-	\begin{tabular}{| c | c | c | c |}
-		\hline
-		 & precision & recall & f1 \\ \hline \hline
-		edges labeled 0&0.96&1.0&0.98  \\ \hline
-		edges labeled 1 & 0.0 & 0.0 & 0.0 \\ \hline
-		nodes labeled 0 & 0.915 & 0.985 & 0.949 \\ \hline
-		nodes labeled 1 & 0.628 & 0.213 & 0.319 \\ \hline
-	\end{tabular}
-	\caption{The classification report on the test set. Nodes and edges labeled 1 are the ones that were in the summary.}
-\end{table}
+\[Softmax\ cross\ entropy\ loss\ on\ nodes\ and\ edges\ averaged = 0.447\]
+
+The classification report on the test set. These nodes and edges are the ones that were in the summary:
+
+\[edges_{precision} = 0.0\]
+\[edges_{recall} = 0.0\]
+\[edges_{F1} = 0.0\]
+\[nodes_{precision} = 62.8\]
+\[nodes_{recall} = 21.3\]
+\[nodes_{F1} = 31.9\]
 
 As it is clear from this the network hardly ever classifies a node as "1", meaning that is should be in the summary graph, but when it does it is 62.8\% accurate.
 
@@ -74,26 +68,11 @@ I trained the network on the whole training set (80\% of the whole dataset) for 
 
 I evaluated the trained network on the test set and the results are the following:
 
-\begin{table}[!h]
-	\centering
-	\begin{tabular}{| c | c |}
-		\hline
-		Test loss & 0.809 \\ \hline
-		Test accuracy over nodes and edges& 0.724 \\ \hline
-	\end{tabular}
-	\caption{Softmax cross entropy loss and accuracy on the test set}
-\end{table}
-
-\begin{table}[!h]
-	\centering
-	\begin{tabular}{| c | c | c | c |}
-		\hline
-		& precision & recall & f1 \\ \hline \hline
-		nodes labeled 0 & 0.819 & 0.814 & 0.816 \\ \hline
-		nodes labeled 1 & 0.534 & 0.542 & 0.538 \\ \hline
-	\end{tabular}
-	\caption{The classification report on the test set. Nodes and edges labeled 1 are the ones that were in the summary.}
-\end{table}
+\[Softmax\ cross\ entropy\ loss\ on\ nodes = 0.809\]
+The classification report on the test set. These nodes and edges are the ones that were in the summary:
+\[nodes_{precision} = 53.4\]
+\[nodes_{recall} =54.2\]
+\[nodes_{F1} = 53.8\]
 
 \subsubsection{Summary reconstruction and evaluation}
 I tried three different approaches at the summary extraction, each have been evaluated by the ROUGE scoring mechanism. For this I used the perl based pyrouge package.
@@ -106,45 +85,24 @@ This reconstruction method scores each sentence of the original article using th
 
 Based on the calculated score of each sentence we can order them by their relevance and keep the four most relevant sentence from the article as the summary.
 
-This method does not utilize the information of the graph structure nor does it prefer longer sentences.
+This method does not utilize the information of the graph structure nor does it prefer longer sentences. As a result the average number of words in a summary are 75.97.
 
-\begin{longtable}{| l | l | l | l | l |}
-	\hline
-	\textbf{Evaluation method}&\textbf{Metric}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline		
-	\multirow{3}{*}{\textbf{ROUGE-1}}
-		&Average Recall&0.39057&0.56350&0.73912 \\
-		&Average Precision&0.23650&0.20366&0.33846 \\ 
-		&Average F1&0.27641&0.28692&0.44619 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-2}}
-		&Average Recall&0.12562&0.20801&0.39292 \\
-		&Average Precision&0.07189&0.07546&0.18290 \\
-		&Average F1&0.08597&0.10587&0.23900 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-3}}
-		&Average Recall&0.06508&0.11009&0.246448 \\
-		&Average Precision&0.03694&0.04068&0.11801 \\
-		&Average F1&0.04424&0.05656&0.15226 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-4}}
-		&Average Recall&0.04171&0.07074&0.17230 \\
-		&Average Precision&0.02395&0.02666&0.08483 \\
-		&Average F1&0.02846&0.03671&0.10807 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-L}}
-		&Average Recall&0.24031&0.34467&0.51007 \\
-		&Average Precision&0.14231&0.12093&0.23272 \\
-		&Average F1&0.16713&0.17149&0.30654 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-W-1.2}}
-		&Average Recall&0.09211&0.12907&0.19517 \\
-		&Average Precision&0.11261&0.09360&0.18583 \\
-		&Average F1&0.09242&0.10068&0.17739 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-S*}}
-		&Average Recall&0.14421&0.27925&.48162 \\
-		&Average Precision&0.05248&0.04148&0.11587 \\
-		&Average F1&0.06344&0.06513&0.16621 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-SU*}}
-		&Average Recall&0.15604&0.29271&0.49149 \\
-		&Average Precision&0.05775&0.04401&0.12013 \\
-		&Average F1&0.06957&0.06914&0.17242 \\ \hline
+For fair comparison I generated shorter TextRank based gensim summaries and cut down the number of sentences in the extracted summaries. I did this by comparing the number of words in each reconstructed summary and chose the number of sentences so the word counts would be as close as possible in each pair.
+
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{| l | l | l | l |}
+		\hline
+		\textbf{Evaluation method}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline
+		\textbf{average word count}&75.97&77.01&74.14 \\ \hline
+		\textbf{ROUGE-1}&39.06&41.77& \\ \hline
+		\textbf{ROUGE-2}&12.56&14.08& \\ \hline
+		\textbf{ROUGE-L}&24.03&25.99& \\ \hline
+		\textbf{ROUGE-SU*}&15.60&17.34& \\ \hline
+	\end{tabular}
 	\caption{ROUGE scores on the test set with reconstruction method using only the node scores}
-\end{longtable}
+\end{table}
+\FloatBarrier
 
 \paragraph{Reconstruction with just the graph structure}
 
@@ -154,45 +112,23 @@ Contrary to the previous version this construction method does not use the outpu
 	score_{sentence} = \sum_{edge \in sentence\ graph} &[1\ if\ sender\ word \notin stopwords] + \\&[1\ if\ receiver\ word \notin stopwords]
 \end{eqnarray*}
 
-The ordering is based on this score. The summary contains the four best sentences.
+The ordering is based on this score. The summary contains the four best sentences. The average length of a summary is 138.42 word.
 
-\begin{longtable}{| l | l | l | l | l |}
-	\hline
-	\textbf{Evaluation method}&\textbf{Metric}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-1}}
-		&Average Recall&0.54166&0.56350&0.73912 \\
-		&Average Precision&0.18856&0.20366&0.33846 \\ 
-		&Average F1&0.26990&0.28692&0.44619 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-2}}
-		&Average Recall&0.18824&0.20801&0.39292 \\
-		&Average Precision&0.06688&0.07546&0.18290 \\
-		&Average F1&0.09491&0.10587&0.23900 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-3}}
-		&Average Recall&0.09844&0.11009&0.246448 \\
-		&Average Precision&0.03593&0.04068&0.11801 \\
-		&Average F1&0.05042&0.05656&0.15226 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-4}}
-		&Average Recall&0.06315&0.07074&0.17230 \\
-		&Average Precision&0.02365&0.02666&0.08483 \\
-		&Average F1&0.03282&0.03671&0.10807 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-L}}
-		&Average Recall&0.32680&0.34467&0.51007 \\
-		&Average Precision&0.11053&0.12093&0.23272 \\
-		&Average F1&0.15918&0.17149&0.30654 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-W-1.2}}
-		&Average Recall&0.12214&0.12907&0.19517 \\
-		&Average Precision&0.08543&0.09360&0.18583 \\
-		&Average F1&0.09396&0.10068&0.17739 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-S*}}
-		&Average Recall&0.25325&0.27925&.48162 \\
-		&Average Precision&0.03534&0.04148&0.11587 \\
-		&Average F1&0.05684&0.06513&0.16621 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-SU*}}
-		&Average Recall&0.26694&0.29271&0.49149 \\
-		&Average Precision&0.03758&0.04401&0.12013 \\
-		&Average F1&0.06048&0.06914&0.17242 \\ \hline
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{| l | l | l | l |}
+		\hline
+		\textbf{Evaluation method}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline
+		
+		\textbf{average word count}&138.42&135.59&103.51 \\ \hline
+		\textbf{ROUGE-1}&54.17&56.35&73.91 \\ \hline
+		\textbf{ROUGE-2}&18.82&20.80&39.29 \\ \hline
+		\textbf{ROUGE-L}&32.68&34.47&51.01 \\ \hline
+		\textbf{ROUGE-SU*}&26.69&29.27&49.15 \\ \hline
+	\end{tabular}
 	\caption{ROUGE scores on the test set with reconstruction method using just the graph structure}
-\end{longtable}
+\end{table}
+\FloatBarrier
 
 \paragraph{Reconstruction with the graph structure and the node scores}
 
@@ -200,43 +136,20 @@ This method is the blend of the previous two. It utilizes the structure of the g
 \begin{eqnarray*}
 	score_{sentence} = \sum_{edge \in sentence\ graph} &[score_{sender\ word}\ if\ sender\ word \notin stopwords] + \\&[score_{receiver\ word}\ if\ receiver\ word \notin stopwords]
 \end{eqnarray*}
-\begin{longtable}{| l | l | l | l | l |}
-	\hline
-	\textbf{Evaluation method}&\textbf{Metric}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-1}}
-		&Average Recall&0.56795&0.56350&0.73912 \\
-		&Average Precision&0.21344&0.20366&0.33846 \\ 
-		&Average F1&0.29885&0.28692&0.44619 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-2}}
-		&Average Recall&0.21968&0.20801&0.39292 \\
-		&Average Precision&0.08345&0.07546&0.18290 \\
-		&Average F1&0.11608&0.10587&0.23900 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-3}}
-		&Average Recall&0.11917&0.11009&0.246448 \\
-		&Average Precision&0.04626&0.04068&0.11801 \\
-		&Average F1&0.06368&0.05656&0.15226 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-4}}
-		&Average Recall&0.07688&0.07074&0.17230 \\
-		&Average Precision&0.03053&0.02666&0.08483 \\
-		&Average F1&0.03282&0.04157&0.10807 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-L}}
-		&Average Recall&0.34952&0.34467&0.51007 \\
-		&Average Precision&0.12771&0.12093&0.23272 \\
-		&Average F1&0.17993&0.17149&0.30654 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-W-1.2}}
-		&Average Recall&0.13174&0.12907&0.19517 \\
-		&Average Precision&0.09944&0.09360&0.18583 \\
-		&Average F1&0.10571&0.10068&0.17739 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-S*}}
-		&Average Recall&0.28093&0.27925&.48162 \\
-		&Average Precision&0.04521&0.04148&0.11587 \\
-		&Average F1&0.07070&0.06513&0.16621 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-SU*}}
-		&Average Recall&0.29450&0.29271&0.49149 \\
-		&Average Precision&0.04788&0.04401&0.12013 \\
-		&Average F1&0.07492&0.06914&0.17242 \\ \hline
-	\caption{ROUGE scores on the test set with reconstruction method using both graph structure and the node scores}
-\end{longtable}
+These summaries also contain the best four sentences. The average number of words in these summaries are 127.11.
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{| l | l | l | l |}
+		\hline
+		\textbf{Evaluation method}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline
+		\textbf{average word count}&127.11&135.59&103.51 \\ \hline
+		\textbf{ROUGE-1}&56.80&56.35&73.91 \\ \hline
+		\textbf{ROUGE-2}&21.97&20.80&39.29 \\ \hline
+		\textbf{ROUGE-L}&34.95&34.47&51.01 \\ \hline
+		\textbf{ROUGE-SU*}&29.45&29.27&49.15 \\ \hline
+	\end{tabular}
+\caption{ROUGE scores on the test set with reconstruction method using both graph structure and the node scores}
+\end{table}
 
 \subsubsection{Example}
 To better visualize the results I compare the summary graph from Chapter~\ref{sect:DataProcessing} (Figure~\ref{fig:usain_summary_graph} and) to the calculated graph (Figure~\ref{fig:usain_bolt_predicted0}). The generated summaries are also written below.
@@ -247,6 +160,8 @@ To better visualize the results I compare the summary graph from Chapter~\ref{se
 	\caption{The calculated summary graph of the example article with just the nodes labeled 1.}
 	\label{fig:usain_bolt_predicted0}
 \end{figure}
+
+\FloatBarrier
 
 \textbox{
 	\textbf{Reconstruction with the node average}
@@ -279,69 +194,32 @@ Due to time constraints I was unable to train the network on the whole training 
 
 I evaluated the trained network and the results are the following:
 
-\begin{table}[!h]
-	\centering
-	\begin{tabular}{| c | c |}
-		\hline
-		Test loss & 0.7996 \\ \hline
-		Test accuracy over nodes and edges& 0.685 \\ \hline
-	\end{tabular}
-	\caption{Softmax cross entropy loss and accuracy on the test set}
-\end{table}
-
-\begin{table}[!h]
-	\centering
-	\begin{tabular}{| c | c | c | c |}
-		\hline
-		& precision & recall & f1 \\ \hline \hline
-		nodes labeled 0 & 0.851 & 0.711 & 0.775 \\ \hline
-		nodes labeled 1 & 0.431 & 0.638 & 0.514 \\ \hline
-	\end{tabular}
-	\caption{The classification report on the test set. Nodes and edges labeled 1 are the ones that were in the summary.}
-\end{table}
+\[Softmax\ cross\ entropy\ loss\ on\ nodes = 0.7996\]
+The classification report on the test set. These nodes and edges are the ones that were in the summary:
+\[nodes_{precision} = 43.1\]
+\[nodes_{recall} = 63.8\]
+\[nodes_{F1} = 51.4\]
 
 \subsubsection{Summary reconstruction and evaluation}
 I tried the same reconstruction method for the results of the GraphAttention model. Keep in mind that this model has been trained for less time and on less data.
 
 \paragraph{Reconstruction with the node average}
 
-\begin{longtable}{| l | l | l | l | l |}
+The average number of words in a four sentence long summary is 75.65.
+
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{| l | l | l | l |}
 	\hline
-	\textbf{Evaluation method}&\textbf{Metric}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline		
-	\multirow{3}{*}{\textbf{ROUGE-1}}
-	&Average Recall&0.39460&0.56350&0.73912 \\
-	&Average Precision&0.23954&0.20366&0.33846 \\ 
-	&Average F1&0.27885&0.28692&0.44619 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-2}}
-	&Average Recall&0.12990&0.20801&0.39292 \\
-	&Average Precision&0.07425&0.07546&0.18290 \\
-	&Average F1&0.08856&0.10587&0.23900 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-3}}
-	&Average Recall&0.06800&0.11009&0.246448 \\
-	&Average Precision&0.03847&0.04068&0.11801 \\
-	&Average F1&0.04603&0.05656&0.15226 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-4}}
-	&Average Recall&0.04386&0.07074&0.17230 \\
-	&Average Precision&0.02510&0.02666&0.08483 \\
-	&Average F1&0.02981&0.03671&0.10807 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-L}}
-	&Average Recall&0.24389&0.34467&0.51007 \\
-	&Average Precision&0.14485&0.12093&0.23272 \\
-	&Average F1&0.16932&0.17149&0.30654 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-W-1.2}}
-	&Average Recall&0.09364&0.12907&0.19517 \\
-	&Average Precision&0.11479&0.09360&0.18583 \\
-	&Average F1&0.09367&0.10068&0.17739 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-S*}}
-	&Average Recall&0.14858&0.27925&.48162 \\
-	&Average Precision&0.05401&0.04148&0.11587 \\
-	&Average F1&0.06483&0.06513&0.16621 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-SU*}}
-	&Average Recall&0.16041&0.29271&0.49149 \\
-	&Average Precision&0.05944&0.04401&0.12013 \\
-	&Average F1&0.06957&0.07100&0.17242 \\ \hline
+	\textbf{Evaluation method}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline
+	\textbf{average word count}&75.65&77.01&74.14 \\ \hline
+	\textbf{ROUGE-1}&39.46&41.77& \\ \hline
+	\textbf{ROUGE-2}&12.99&14.08& \\ \hline
+	\textbf{ROUGE-L}&24.39&25.99& \\ \hline
+	\textbf{ROUGE-SU*}&16.04&17.34& \\ \hline
+	\end{tabular}
 	\caption{ROUGE scores on the test set with reconstruction method using only the node scores}
-\end{longtable}
+\end{table}
 
 \paragraph{Reconstruction with just the graph structure}
 
@@ -349,43 +227,21 @@ The result is the same as before, since we only consider the graph structures an
 
 \paragraph{Reconstruction with the graph structure and the node scores}
 
-\begin{longtable}{| l | l | l | l | l |}
+The average word count in a four sentence long summary is 130.21.
+
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{| l | l | l | l |}
 	\hline
-	\textbf{Evaluation method}&\textbf{Metric}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-1}}
-	&Average Recall&0.56020&0.56350&0.73912 \\
-	&Average Precision&0.20580&0.20366&0.33846 \\ 
-	&Average F1&0.29006&0.28692&0.44619 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-2}}
-	&Average Recall&0.21028&0.20801&0.39292 \\
-	&Average Precision&0.07823&0.07546&0.18290 \\
-	&Average F1&0.10951&0.10587&0.23900 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-3}}
-	&Average Recall&0.11300&0.11009&0.246448 \\
-	&Average Precision&0.04297&0.04068&0.11801 \\
-	&Average F1&0.05954&0.05656&0.15226 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-4}}
-	&Average Recall&0.07278&0.07074&0.17230 \\
-	&Average Precision&0.02831&0.02666&0.08483 \\
-	&Average F1&0.03881&0.04157&0.10807 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-L}}
-	&Average Recall&0.34276&0.34467&0.51007 \\
-	&Average Precision&0.12238&0.12093&0.23272 \\
-	&Average F1&0.17356&0.17149&0.30654 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-W-1.2}}
-	&Average Recall&0.12889&0.12907&0.19517 \\
-	&Average Precision&0.09510&0.09360&0.18583 \\
-	&Average F1&0.10214&0.10068&0.17739 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-S*}}
-	&Average Recall&0.27247&0.27925&.48162 \\
-	&Average Precision&0.04199&0.04148&0.11587 \\
-	&Average F1&0.07070&0.06623&0.16621 \\ \hline \hline
-	\multirow{3}{*}{\textbf{ROUGE-SU*}}
-	&Average Recall&0.28611&0.29271&0.49149 \\
-	&Average Precision&0.04453&0.04401&0.12013 \\
-	&Average F1&0.07028&0.06914&0.17242 \\ \hline
+		\textbf{Evaluation method}&\textbf{System}&\textbf{Gensim}&\textbf{Extracted}\\ \hline \hline
+		\textbf{average word count}&130.21&135.59&103.51 \\ \hline
+		\textbf{ROUGE-1}&56.02&56.35&73.91 \\ \hline
+		\textbf{ROUGE-2}&21.03&20.80&39.29 \\ \hline
+		\textbf{ROUGE-L}&34.28&34.47&51.01 \\ \hline
+		\textbf{ROUGE-SU*}&28.61&29.27&49.15 \\ \hline
+	\end{tabular}
 	\caption{ROUGE scores on the test set with reconstruction method using both graph structure and the node scores}
-\end{longtable}
+\end{table}
 
 \subsubsection{Example}
 Similarly to the previous case I compared the summary graph from Chapter~\ref{sect:DataProcessing} (Figure~\ref{fig:usain_summary_graph} and) to the calculated graph (Figure~\ref{fig:usain_bolt_predicted1}). The generated summaries are also written below.
@@ -396,6 +252,8 @@ Similarly to the previous case I compared the summary graph from Chapter~\ref{se
 	\caption{The calculated summary graph of the example article with just the nodes labeled 1.}
 	\label{fig:usain_bolt_predicted1}
 \end{figure}
+
+\FloatBarrier
 
 \textbox{
 	\textbf{Reconstruction with the node average}
@@ -418,3 +276,40 @@ Similarly to the previous case I compared the summary graph from Chapter~\ref{se
 	Defending champions, the United States, were initially back in the bronze medal position after losing time on the second handover between Alexandria Anderson and English Gardner, but promoted to silver when France were subsequently disqualified for an illegal handover.
 	Earlier, Jamaica's women underlined their dominance in the sprint events by winning the 4x100m relay gold, anchored by Shelly-Ann Fraser-Pryce, who like Bolt was completing a triple.
 	Germany's Christina Obergfoll finally took gold at global level in the women's javelin after five previous silvers, while Kenya's Asbel Kiprop easily won a tactical men's 1500m final.}{}
+\FloatBarrier
+
+\section{Comparison}
+
+Table~\ref{tab:short} contains the comparable ROUGE scores of the SimpleGraphAttention model's and the GraphAttention model's summaries reconstructed with the node average method and also the TextRank based benchmark method's output followed by the maximum achievable ROUGE scores with the adequate summary lengths.
+
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{| l | l | l | l | l |}
+		\hline
+		\textbf{Metric}&\textbf{Simple node avg}&\textbf{Attended node avg}&\textbf{Gensim}&\textbf{Extracted} \\ \hline \hline
+		\textbf{avg words}&75.97&75.65&77.01&74.14 \\ \hline
+		\textbf{ROUGE-1}&39.06&39.46&41.77& \\ \hline
+		\textbf{ROUGE-2}&12.56&12.99&14.08& \\ \hline
+		\textbf{ROUGE-L}&24.03&24.39&25.99& \\ \hline
+		\textbf{ROUGE-SU*}&15.60&16.04&17.34& \\ \hline
+	\end{tabular}
+	\caption{Short summary comparisons}
+	\label{tab:short}
+\end{table}
+
+Table~\ref{tab:long} contains the comparable ROUGE scores of the SimpleGraphAttention model's and the GraphAttention model's summaries reconstructed with the node scores and the graph structure and also the TextRank based benchmark method's output followed by the maximum achievable ROUGE scores all constructed by the top 4 sentences.
+
+\begin{table}[!ht]
+	\centering
+	\begin{tabular}{| l | l | l | l | l | l |}
+		\hline
+		\textbf{Metric}&\textbf{Just structure}&\textbf{Simple}&\textbf{Attended}&\textbf{Gensim}&\textbf{Extracted} \\ \hline \hline
+		\textbf{avg words}&138.42&127.11&130.21&135.59&103.51 \\ \hline
+		\textbf{ROUGE-1}&54.17&56.80&56.02&56.35&73.91 \\ \hline
+		\textbf{ROUGE-2}&18.82&21.97&21.03&20.80&39.29 \\ \hline
+		\textbf{ROUGE-L}&32.68&34.95&34.28&34.47&51.01 \\ \hline
+		\textbf{ROUGE-SU*}&26.69&29.45&28.61&29.27&49.15 \\ \hline
+	\end{tabular}
+	\caption{Long summary comparisons}
+	\label{tab:long}
+\end{table}
