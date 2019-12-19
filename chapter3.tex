@@ -23,10 +23,10 @@ This is the only graph dependent part of the model. It also uses multi layer per
 This section of the network is repeated resulting in a hidden state that gets feed forward again in the Core section. Each step has its own output with its timestamp.
 
 \subsection{Decoder}
-The decoder model has the same structure as the encoder. It does not use any kind of activation on the last layer, which enables it to better generalization, but also making it harder to use on a specific project eq. classifying whether or not the summary graph contains the given node or edge.
+The decoder model has the same structure as the encoder. It does not use any kind of activation on the last layer, which enables it to better generalize, but also making it harder to use on a specific project eq. classifying whether or not the summary graph contains the given node or edge.
 
 \section{SimpleGraphAttention model}
-I based this model architecture on the Encode Process Decode model, but it is better suited for NLP problems as you can see on Figure~\ref{fig:graph-attention0}.
+I based the architecture of this model on the Encode Process Decode model. I modified it to be better suited for NLP problems, because it transforms the input words into higher dimension vector space, as you can see on Figure~\ref{fig:graph-attention0}.
 
 \begin{figure}[!ht]
 	\centering
@@ -37,7 +37,7 @@ I based this model architecture on the Encode Process Decode model, but it is be
 
 \subsection{Encoder}
 
-The encoder is made up of two Embedding layers one for the nodes' lemmas and one for the edges' relation type (See Figure~\ref{fig:graph-attention0-encoder}). 
+The encoder part of the network contains two Embedding layers; one for the lemmas of the nodes and one for the edges' type (See Figure~\ref{fig:graph-attention0-encoder}). 
 
 \begin{figure}[!ht]
 	\centering
@@ -65,7 +65,7 @@ Since this section of the model is graph dependent, after each feature update, t
 
 \subsection{Decoder}
 
-The decoder part of the model is also graph independent just like the encoder and is simply serves the function of the softmax output of the whole network. Its structure is presented on Figure~\ref{fig:graph-attention0-decoder}.
+The decoder part of the model is also graph independent just like the encoder and it simply serves the function of the softmax output of the whole network. Its structure is presented on Figure~\ref{fig:graph-attention0-decoder}.
 
 \begin{figure}[!ht]
 	\centering
@@ -97,9 +97,9 @@ The network part of the model went under some changes compared to the SimpleGrap
 	\label{fig:graph-attention1-network}
 \end{figure}
 
-The Graph Attentional Layer has been described in a 2018 paper titled \textit{Graph Attention Networks}\cite{GAT}. It was designed to work well with Graph Convolutional Network structures, but I was able to implement is for the Graph Neural Network architecture as well.
+The Graph Attentional Layer has been described in a 2018 paper titled \textit{Graph Attention Networks}~\cite{GAT}. It was designed to work well with Graph Convolutional Network structures, but I was able to implement it for the Graph Neural Network architecture as well.
 
-This layer updates node features the following way: Suppose the features of the nodes are \(h_i\), we define a weight matrix \(W \in \mathbb{R}^{input\ features} \mathbb{R}^{output\ features} \) and a feed forward attention layer.
+This layer updates node features the following way: Suppose the features of the nodes are \(h_i\), we define a weight matrix \(W \in \mathbb{R}^{input\ features} \times \mathbb{R}^{output\ features} \) and a feed forward attention layer.
 
 Let the normalized attention coefficients be:
 

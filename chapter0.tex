@@ -2,25 +2,25 @@
 \chapter{Background}\label{sect:Background}
 %----------------------------------------------------------------------------
 \section{Summarization}
-Summarization is the task of text shortening with the least amount of information loss. Being able to do this automatically and with nearly human level accuracy is a challenge to this date but its usefulness is undeniable especially in the news industry where is a constant supply of new articles and writing a summary for each of them would be a waste of resources if there would be another way of summarizing them.
+Summarization is the task of text shortening with the least amount of information loss. Being able to do this automatically and with nearly human level accuracy is a challenge to this date but its usefulness is undeniable especially in the news industry where there is a constant supply of new articles and writing a summary for each of them would be a waste of resources if there would be another way of summarizing them.
 
 We can distinguish between two approaches of this problem, abstractive and extractive summarization, both interesting and challenging. These are described in the following subsections.
 
 \subsection{Abstractive summarizaton}
-Summaries written by humans are usually free-form, not a word-by-word or sentence-by-sentence cut outs from the article. The goal of abstractive summarization is to construct the summaries in a similar fashion, being creative with its word and expression choice so the end summary is as sound and as readable as any summary written by a person.
+Summaries written by humans are usually free-form, not a word-by-word or sentence-by-sentence cut outs from the article. The goal of abstractive summarization is to construct the summaries in a similar fashion, being creative with its word and expression choice so the resulting summary is as sound and as readable as any summary written by a person.
 
 This poses multiple difficulties because the system not only has to figure out what is important in an article but also has to construct grammatically correct sentences that are at the same time semantically sound and actually a good summary of the article without false information added.
 
-This is a hard compared to the extractive approach but recently there have been some breakthroughs with end-to-end seq2seq neural network models. The first breakthrough was in 2017 in the article titled Get To The Point: Summarization with Pointer-Generator Networks~\cite{AbstractiveSum}. And had since been developed further in Mixture Content Selection for Diverse Sequence Generation~\cite{DiverseAbstract} and Unified Language Model Pre-training for Natural Language Understanding and Generation~\cite{UniLM}.
+This is a hard task compared to the extractive approach but recently there have been some breakthroughs with end-to-end seq2seq neural network models. The first breakthrough was in 2017 in the article titled Get To The Point: Summarization with Pointer-Generator Networks~\cite{AbstractiveSum} and had since been developed further in Mixture Content Selection for Diverse Sequence Generation~\cite{DiverseAbstract} and Unified Language Model Pre-training for Natural Language Understanding and Generation~\cite{UniLM}.
 
-However it is important to note that the outputs of these networks are far from human-written level, they can contain factual falsehoods and incorrect grammar so they are not yet applied on real life problems.
+However, it is important to note that the outputs of these networks are far from human-written level, they can contain factual falsehoods and incorrect grammar so they are not yet applied on real life problems.
 
 \subsection{Extractive summarization}
 Extractive summarization is an easier approach to the problem of summarization because it just chooses the expressions or sentences to keep from the original text. One could think of this as highlighting the most important information in a text.
 
-The mayor advantage of extractive summarization is the fact that there is no need to paraphrase anything from the original text, but the downside is that the maximum achievable ROUGE score is limited by the sentences of the text.
+The mayor advantage of extractive summarization is the fact that there is no need to paraphrase anything from the original text, but the downside is that the maximum achievable correctness is limited by the sentences of the text.
 
-I've decided to choose this approach for my thesis but it's important to mention, that on its own the Graph Neural Network model could be used for abstractive summarization as well, although it would be much more complicated because it would involve splitting the end graph into smaller sentence-sized graphs and than construct textual data from these smaller UD graphs. The former would on its own be a challenge and the latter part is still an unsolved problem on the field of NLP\footnote{\url{https://www.aclweb.org/portal/content/announcement-surface-realization-shared-task-2019}}.
+I've decided to choose this approach for my thesis but it's important to mention, that on its own the Graph Neural Network model could be used for abstractive summarization as well, although it would be much more complicated because it would involve splitting the end graph into smaller sentence-sized graphs and then construct textual data from these smaller UD graphs. The former would be a challenge on its own and the latter part is still an unsolved problem on the field of NLP\footnote{\url{https://www.aclweb.org/portal/content/announcement-surface-realization-shared-task-2019}}.
 
 \section{Evaluation}
 In general we want our generated summary to be as similar to the reference summaries as possible. For this we are looking at the number and length of overlaps between them.
@@ -32,12 +32,12 @@ The BLEU~\cite{BLEU} score was first introduced as an automatic evaluation tool 
 
 BLEU is a precision oriented measure, calculated by the following equation.
 
-\[BLEU = \frac{\sum_{S \in CandidateSummaries}\sum_{n\_gram \in S} Count_{clip} (n\_grams)}{\sum_{S \in CandidateSummaries}\sum_{n\_gram' \in S} Count(n\_grams')}\]
+\[BLEU = \frac{\sum_{S \in CandidateSummaries}\sum_{n\_gram \in S} Count_{clip} (n\_grams)}{\sum_{S' \in CandidateSummaries}\sum_{n\_gram' \in S'} Count(n\_grams')}\]
 
 This metric is rarely used for summary evaluation, it is more useful for machine translation problems.
 
 \subsection{ROUGE score}
-The ROUGE score metric has been developed in 2004 by Chin-Yew Lin~\cite{ROUGE}. ROUGE is short for Recall-Oriented Understudy for Gisting Evaluation. The metric is used to determine the quality of a generated summary by comparing it to a set of human written summaries. It yields similar results to human intuition, especially ROUGE-2, which correlates the best as it was shown in \textit{Re-evaluating Automatic Summarization with BLEU and 192 Shades of ROUGE}~\cite{ShadesOfROUGE}. ROUGE-1 and ROUGE-L are the metrics most used in scientific publications.
+The ROUGE score metric has been developed in 2004 by Chin-Yew Lin~\cite{ROUGE}. ROUGE is short for Recall-Oriented Understudy for Gisting Evaluation. The metric is used to determine the quality of a generated summary by comparing it to a set of human written summaries. It yields similar results to human intuition, especially ROUGE-2 and ROUGE-SU4, which correlate the best as it was shown in \textit{Re-evaluating Automatic Summarization with BLEU and 192 Shades of ROUGE}~\cite{ShadesOfROUGE}. ROUGE-1 and ROUGE-L are the metrics most used in scientific publications.
 
 \textbf{ROUGE-N} is the ROUGE measure over n-grams. An n-gram is an expression from the text with n number of words.
 
@@ -71,22 +71,22 @@ Although the ROUGE-S allows skips in the matches but it is still sensitive to wo
 
 \textbf{ROUGE-SU} is an expansion over the ROUGE-S metric adding a unigram feature to it to account for single word matches.
 
-It is important ot note that comparing systems based on their respective ROUGE score is only meaningful if the compared summaries are the same or similar length. Otherwise the longer summary will naturally achieve higher score.
+It is important to note that comparing systems based on their respective ROUGE score is only meaningful if the compared summaries are the same or similar length. Otherwise the longer summary will naturally achieve higher score.
 
 \section{Previous work}
-The summmarization is a long standing task. There have been multiple attempts at solving this problem.
+The summarization is a long standing task. There have been multiple attempts at solving this problem.
 
-\subsection{Text Rank}
+\subsection{TextRank}
 
-The Text Rank algorithm is an unsupervised method for automatic text summarization and it can also be used for keyword extraction. It has first described in a paper titled TextRank: Bringing Order into Texts~\cite{TextRank:2004}.
+The TextRank algorithm is an unsupervised method for automatic text summarization and it can also be used for keyword extraction. It has been first described in a paper titled TextRank: Bringing Order into Texts~\cite{TextRank:2004}.
 
-TextRank is a graph based method that (for summarization purposes) builds graph representations from the articles using similarity measures of the sentences in them. Then the algorithm scores each of the vertices is calculated with the following formula:
+TextRank is a graph based method that (for summarization purposes) builds graph representations from the articles using similarity measures of the sentences in them. Then the algorithm scores each of the vertices with the following formula:
 
 \[score(V_i) = (1 - d) + d \sum_{j \in InComingTo(V_i)} \frac{1}{|OutGoingFrom(V_j)|} score(V_j)\]
 
 where d is a damping factor between 0 and 1.
 
-The article~\cite{TextRank} also referenced by the \href{https://radimrehurek.com/gensim/summarization/summariser.html}{gensim documentation} describes multiple alternative methods for Text Rank. Gensim uses one of these alternative methods for summary extraction.
+The article~\cite{TextRank} also referenced by the \href{https://radimrehurek.com/gensim/summarization/summariser.html}{gensim documentation} describes multiple alternative methods for TextRank. Gensim uses one of these alternative methods for summary extraction.
 I will use this as a benchmark for my model evaluation.
 \FloatBarrier
 

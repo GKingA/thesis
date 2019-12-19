@@ -10,7 +10,7 @@ The only downside is that the summaries are not strictly extracted from the arti
 
 There are multiple preprocessed versions available on this dataset. The dataset I used consists of the articles, their corresponding highlights and also the set of sentences from each article, that together give the highest achievable ROUGE score using the naive greedy method described in the following subsection. I will reference these summaries as the extracted summary of an article.
 
-\subsection{Greedy method}
+\subsection{Greedy algorithm}
 The (naive) greedy method works with a very basic main principle, always choose the sentence, that maximizes the ROUGE score of the summary.
 
 It's important to note, that it is not a summarization method, it only gives us the highest achievable ROUGE score on a given dataset.
@@ -19,7 +19,7 @@ It's important to note, that it is not a summarization method, it only gives us 
 	\SetAlgoLined
 	\KwResult{The n best sentence from the text}
 	best\_sentences = ""\;
-	\For{i < number of required sentences}{
+	\While{i < number of required sentences}{
 		rouge\_scores = map()\;
 		\ForEach{sentence in text \(\notin\) best\_sentences}{
 			rouge\_scores[concat(best\_sentences, sentence)] =  rouge\_score(sentence)\;
@@ -44,7 +44,7 @@ It's important to note, that it is not a summarization method, it only gives us 
 	\caption{ROUGE scores of the top 4 sentences chosen by the naive greedy algorithm over the test set of the CNN-Daily Mail data}
 	\label{tab:extr}
 \end{table}
-As the table~\ref{tab:extr} shows this method works surprisingly well. There have been some advancement of this method regarding its speed\cite{GreedySum}.
+As the table~\ref{tab:extr} shows this method works surprisingly well. There have been some advancement of this method regarding its speed~\cite{GreedySum}.
 
 \subsection{Gensim Benchmark}
 As I mentioned before, I used the output of gensim's TextRank based summarization method as my benchmark for the graph neural network model evaluation.
@@ -97,37 +97,37 @@ Before we discuss the data processing steps any further I need to clarify what U
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=100mm, keepaspectratio]{figures/UD.png}
-	\caption{UD graph of \textit{Bills on ports and immigration were submitted by Senator Brownback, Republican of Kansas.} Image from \href{https://nlp.stanford.edu/software/stanford-dependencies.shtml}{the Stanford site}}\footnote{https://nlp.stanford.edu/software/stanford-dependencies.shtml}
+	\caption{UD graph of "\textit{Bills on ports and immigration were submitted by Senator Brownback, Republican of Kansas.}" Image from \href{https://nlp.stanford.edu/software/stanford-dependencies.shtml}{the Stanford site}}
 	\label{fig:UD}
 \end{figure}
 
 Universal dependency trees represent the grammatical relationships between the words of a sentence; it gives us the grammatical dependencies between words. They can be easily interpreted with some knowledge of the grammatical structure of languages and they are widely used because of this. UD graphs are highly standardized and are a language independent way to generate the grammatical structure.
 
-One example of a dependency parsed sentence is on Figure~\ref{fig:UD}. You can see the connections and their types between words. Some dependency parsers also predict part-of-speech (POS) tags. For this example sentence the POS tags are the following:
+One example of a dependency parsed sentence is on Figure~\ref{fig:UD}\footnote{https://nlp.stanford.edu/software/stanford-dependencies.shtml}. You can see the connections and their types between words. Some dependency parsers also predict part-of-speech (POS) tags. For this example sentence the POS tags are the following:
 \textbox{Bills: \textit{noun}, on: \textit{preposition}, ports: \textit{noun}, and: \textit{conjunction}, immigration: \textit{noun}, were: \textit{verb}, submitted: \textit{verb}, by: \textit{preposition}, Senator: \textit{noun}, Brownback: \textit{noun}, Republican: \textit{noun}, of: \textit{preposition}, Kansas: \textit{noun}}{}
 
 Dependency trees have been used from the early 20th century based on the work of Lucien Tesni\`ere. In his book titled \textit{\'El\'ements de syntaxe structurale} (Elements of Structural Syntax)\cite{UD} he described the modern grammatical dependency graph structure.
 
 We construct these trees by dependency parsing. There is a multitude of ways we can do that, the library I used in my solution (\href{https://github.com/stanfordnlp/stanfordnlp}{stanfordnlp})\footnote{https://github.com/stanfordnlp/stanfordnlp} utilizes the deep learning based approach.
 
-Most UD parsing methods use treebanks built from parsed corpora, that is used for annotation. Treebanks have been standardized in 2013 by Ryan McDonald's team~\cite{TextRank}. Treebanks in multiple languages are available on the \href{https://universaldependencies.org/}{universal dependency site}.\footnote{\url{https://universaldependencies.org/}} There was a shared task~\cite{ParserSharedTask} to build a parser that is capable of dependency parsing in multiple languages.
+Most UD parsing methods use treebanks built from parsed corpora, and are used for annotation. Treebanks have been standardized in 2013 by Ryan McDonald's team~\cite{TextRank}. Treebanks are available in multiple languages on the \href{https://universaldependencies.org/}{universal dependency site}.\footnote{\url{https://universaldependencies.org/}} There was a shared task~\cite{ParserSharedTask} to build a parser that is capable of dependency parsing in multiple languages.
 
 %----------------------------------------------------------------------------
 \section{Graph format}
 %----------------------------------------------------------------------------
 
-The graph\_nets library was developed and published on \href{https://github.com/deepmind/graph_nets}{Github}\footnote{\url{https://github.com/deepmind/graph_nets}} by DeepMind in 2018. The team detailed their solutions in the publication titled \textit{Relational inductive biases, deep learning, and graph networks}~\cite{GraphNet}. The graph network was defined to learn graph transformations between relational data. Such relational data can be data from physical systems, sorting problems, shortest path problems.\footnote{\url{https://github.com/deepmind/graph_nets/tree/master/graph_nets/demos}} At first it was not clear whether they can be efficiently trained on real-world data,\footnote{\url{https://github.com/deepmind/graph\_nets/issues/36}} but experiments quickly showed, it can be trained with appropriate relational data.
+The graph\_nets library was developed and published on \href{https://github.com/deepmind/graph_nets}{GitHub}\footnote{\url{https://github.com/deepmind/graph_nets}} by DeepMind in 2018. The team detailed their solutions in the publication titled \textit{Relational inductive biases, deep learning, and graph networks}~\cite{GraphNet}. The graph network was defined to learn graph transformations between relational data. Such relational data can be data from physical systems, sorting problems, shortest path problems.\footnote{\url{https://github.com/deepmind/graph_nets/tree/master/graph_nets/demos}} At first it was not clear whether they can be efficiently trained on real-world data,\footnote{\url{https://github.com/deepmind/graph\_nets/issues/36}} but experiments quickly showed, it can be trained with appropriate relational data.
 
-I defined the extractive summarization as graph transformation, where the input graph is the merged article graph and the output is said article graph with the nodes and edges that are in the summary graph marked with one and the ones not in the summary graph marked with zero. I used the graph\_nets library to train graph neural networks to learn this graph transformation.
+I defined the extractive summarization as graph transformation, where the input graph is the merged article graph and the output is the said article graph with the nodes and edges that are in the summary graph marked with one and the ones not in the summary graph marked with zero. I used the graph\_nets library to train graph neural networks to learn this graph transformation.
 	
-The graph\_nets library uses a specific format for graphs, a so called GraphTuple. The user can transform multiple graphs with networkx format or dictionary	 to a GraphTuple object. In my project I used dictionaries because they seemed to be the more straight forward and manageable approach.
+The graph\_nets library uses a specific format for graphs, a so called GraphTuple. The user can transform multiple graphs with networkx format or dictionary	 to a GraphTuple object. In my project I used dictionaries because they seemed to be the more straightforward and manageable approach.
 The graph dictionary contains the following elements:
 \begin{itemize}
-	\item nodes: list containing the feature vectors of each node. In my final solution each node feature vector is the lemma and the part-of-speech tag of the given word 
+	\item nodes: list containing the feature vectors of each node. In my final solution each node's feature vector is the lemma and the part-of-speech tag of the given word 
 	\item edges: list containing the feature vectors of each edge. The final feature vector contains the type of each word relation.
 	\item globals: global parameter list. I found no relevant use for this parameter in my project.
-	\item senders: list containing the indexes of the sender nodes in the order of the edges.
-	\item receivers: list containing the indexes of the receiver nodes in the order of the edges.
+	\item senders: list containing the indices of the sender nodes in the order of the edges.
+	\item receivers: list containing the indices of the receiver nodes in the order of the edges.
 \end{itemize}
 
 \begin{figure}[!ht]
@@ -137,10 +137,10 @@ The graph dictionary contains the following elements:
 	\label{fig:transform_graph}
 \end{figure}
 
-On the visual representation Figure \ref{fig:transform_graph} of this kind of graph transformation I highlighted the nodes and edges and the corresponding feature vectors and indexes with the same color for easy traceability.
+On the visual representation Figure \ref{fig:transform_graph} of this kind of graph transformation I highlighted the nodes and edges and the corresponding feature vectors and indices with the same color for easy traceability.
 \FloatBarrier
 
-Although I mentioned the transformation between one graph dictionary and one GraphTuble, but one instance of GraphTuple usually contains a batch of multiple graphs. To be able to handle multiple graphs the GraphTuple object has two more fields calculated during the transformation between the list of graph dictionaries and the GraphTuple instance:
+Although I mentioned the transformation between one graph dictionary and one GraphTuple, but one instance of GraphTuple usually contains a batch of multiple graphs. To be able to handle multiple graphs the GraphTuple object has two more fields calculated during the transformation between the list of graph dictionaries and the GraphTuple instance:
 \begin{itemize}
 	\item n\_node: the number of nodes in each graph.
 	\item n\_edge: the number of edges in each graph.
@@ -153,7 +153,7 @@ Although I mentioned the transformation between one graph dictionary and one Gra
 	\label{fig:transform_multiple}
 \end{figure}
 
-On the Figure \ref{fig:transform_multiple} depicting this I also applied highlighting on the nodes, edges and graph backgrounds and the corresponding feature vectors and indexes with the same color.
+On the Figure \ref{fig:transform_multiple} depicting this I also applied highlighting on the nodes, edges and graph backgrounds and the corresponding feature vectors and indices with the same color.
 
 \FloatBarrier
 %----------------------------------------------------------------------------
@@ -217,6 +217,6 @@ This way I was able to achieve the same structure, but with marked summary nodes
 
 The problem with this approach was the fact, that some of the expressions used in the summary did not match up with anything from the original text so the result could not contain the same level of information as the summary graph on it's own.
 
-However the dataset contained the extracted summaries with the best possible ROUGE score and I decided to use that as the expected output of my neural network. The construction is similar to the previous one, but instead of generating an other graph and then trying to find the corresponding parts I only iterated through the ud graphs b sentences and labeled the nodes and edges in that with the right label.
+However, the dataset contained the extracted summaries with the best possible ROUGE score and I decided to use that as the expected output of my neural network. The construction is similar to the previous one, but instead of generating another graph and then trying to find the corresponding parts I only iterated through the UD graphs of the sentences and labeled the nodes and edges in that with the right label.
 
 The graphs resulting from this approach contained more information and proved to be better for training. On Figure \ref{fig:usain_article_graph_colored} and Figure \ref{fig:usain_summary_graph} you can see the results of the first article visualized in two different ways.

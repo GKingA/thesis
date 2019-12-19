@@ -35,7 +35,7 @@ So called activation functions are used after the summation to bring non-lineari
 
 So the result of one neuron in a layer is calculated as follows:
 
-\[\hat{y} = activationFunction(\sum_{i=1}^{m}(x_i * w_i + b))\]
+\[\hat{y} = activationFunction(\sum_{i=1}^{m}(x_i  w_i + b))\]
 
 \begin{figure}[!ht]
 	\centering
@@ -62,16 +62,16 @@ Where \(\eta\) is the learning rate.
 
 The learning rate parameter can also change during the training process. This is called optimization. The main goal of it is to overcome the problems with setting the learning rate (too high can cause us to jump over any good solution, too low results in very slow learning and settling in a local minimum).
 
-One such optimization method is called Adam. It is a cross between two other methods: Adaptive learning rate and Momentum. I used it for the training the models described in the next chapter. The basic idea is slowly degrading the learning rate, based on the previous gradient.
+One such optimization method is called Adam. It is a cross between two other methods: Adaptive learning rate and Momentum. I used it for training the models described in the next chapter. The basic idea is slowly degrading the learning rate, based on the previous gradient.
 
 The backpropagation method can result in under-fitting, when the results are not getting close to the expected and over-fitting, when the results on the training set look promising, but on the test set they are not getting better, and start to worsen after a while. To prevent over-fitting we can use early-stopping which will stop the training if the results on the test set are getting worse. I used early-stopping in my solution as well.
 
 \subsection{Embedding layers}
 
-The function of embedding layers is to turn values to fixed length vectors. They are used mostly in natural language processing to work as word2vec translation. Word2vec is the mechanism to translate a word into vector space.\cite{Word2Vec}
+The function of embedding layers is to turn values to fixed length vectors. They are used mostly in natural language processing to work as word2vec translation. Word2vec is the mechanism to translate a word into vector space.~\cite{Word2Vec}
 
 Word embeddings are used in basically all state-of-the art systems related to
-natural language processing applications. Mikolov\cite{Mikolov:2013x} showed that word embeddings can be applied for vector operations, like addition or subtraction, and these operations often result in meaningful representation. If we have example words "King", "Man", "Woman", then the vector("King") - vector("Man") + vector("Woman") will most likely result in vector that is close to vector("Queen") in the embedding space. See Figure~\ref{fig:worvec}.
+natural language processing applications. Mikolov~\cite{Mikolov:2013x} showed that word embeddings can be applied for vector operations, like addition or subtraction, and these operations often result in meaningful representation. If we have example words "King", "Man", "Woman", then the vector("King") - vector("Man") + vector("Woman") will most likely result in vector that is close to vector("Queen") in the embedding space. See Figure~\ref{fig:worvec}.
 
 \begin{figure}[!ht]
 	\centering
@@ -80,7 +80,7 @@ natural language processing applications. Mikolov\cite{Mikolov:2013x} showed tha
 	\label{fig:worvec}
 \end{figure}
 
-When using embedding layers we want to find vectors for each word so that it can model the word's meaning. We achieve this by looking at the context, the word usually appears in. If two words like \textit{apple} and \textit{orange} usually appear in the same context, than the vectors assigned to these words should have low cosine distance between them.
+When using embedding layers we want to find vectors for each word so that it can model the word's meaning. We achieve this by looking at the context, the word usually appears in. If two words like \textit{apple} and \textit{orange} usually appear in the same context, then the vectors assigned to these words should have low cosine distance between them.
 
 If you are building an NLP model, the embedding layer should be in the first layer, since its purpose is to make the transition from word to vector, and the word in this case is the input.
 
@@ -93,9 +93,9 @@ If you are building an NLP model, the embedding layer should be in the first lay
 
 The input dimension of this layer is the size of the vocabulary and the output dimension is the size of the dense vector. Usually the vocabulary size greatly exceeds the embedding dimension since the output vectors size is fixed and can range from 300 to 1000, and the vocabulary - depending on the dataset - can be way higher than that. See at Figure~\ref{fig:embedding_layer}.
 
-They work mostly like a lookup table that can be trained. A lot of the times we use pretrained models, like the GloVe embeddings\cite{GloVe} that have been trained on enormous datasets. We can also train them on our specific problem, or use the pretrained and our own embeddings simultaneously.
+They work mostly like a lookup table that can be trained. Often times we use pretrained models, like the GloVe embeddings~\cite{GloVe} that have been trained on enormous datasets. We can also train them on our specific problem, or use the pretrained and our own embeddings simultaneously.
 
-There has been a huge step forward on this field with the appearance of pre-trained embeddings built from language models. The first such embedding is ELMo \cite{ELMo} which is a deep-contextualized word representation capable to handle character level features as well as the context of a given word.
+There has been a huge step forward on this field with the appearance of pre-trained embeddings built from language models. The first such embedding is ELMo~\cite{ELMo} which is a deep-contextualized word representation capable to handle character level features as well as the context of a given word.
 
 \subsection{Recurrent Neural Networks}
 
@@ -128,7 +128,7 @@ The gradient vanishing or explosion can be a problem with this RNN.
 There is a multitude of solutions for the exploding gradients, one of which is called gradient clipping. This technique is a very simple yet powerful way of dealing with exploding gradients. All it does is that it limits the size of the gradient, if its norm is higher than a set threshold.
 
 \subsubsection{Long-Short Term Memory}
-Long-short term memory networks\cite{LSTM} are the extension of the previously discussed recurrent neural network. The main difference is that it also has an internal long term memory. Usually these type of networks are more reluctant to have the exploding gradient problem.
+Long-short term memory networks~\cite{LSTM} are the extension of the previously discussed recurrent neural network. The main difference is that it also has an internal long term memory. Usually these type of networks are more reluctant to have the exploding gradient problem.
 
 Like the simple RNN, LSTMs also have hidden states, that are calculated slightly differently.
 \\
@@ -142,7 +142,7 @@ Like the simple RNN, LSTMs also have hidden states, that are calculated slightly
 	\end{itemize}
 \end{minipage}
 
-These gates are analog and their values ranges from 0 to 1 with the sigmoid function. A simplified depiction can be seen at Figure~\ref{fig:lstm}.
+These gates are analog and their values range from 0 to 1 with the sigmoid function. A simplified depiction can be seen at Figure~\ref{fig:lstm}.
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=125mm, keepaspectratio]{figures/lstm.png}
@@ -155,7 +155,7 @@ The sigmoid function allows this structure to be able to learn, meaning that we 
 Long-short term memory networks are used in natural language processing, but also in generative networks, like video or image description generation, text generation and so on.
 
 \subsection{Attention}
-The Attention mechanism was first described by Dzmitry Bahdanau in 2015 \cite{Bahdanau:2015} and was used for machine translation. Since then it became a widely used tool in natural language processing. The idea behind this mechanism is that when the neural network predicts the output, it only uses parts of the given input instead of the full input. That is where the most relevant information is concentrated and this mechanism only pays \textit{attention} to these parts and the network has to learn what to pay attention to.
+The Attention mechanism was first described by Dzmitry Bahdanau in 2015~\cite{Bahdanau:2015} and was used for machine translation. Since then it became a widely used tool in natural language processing. The idea behind this mechanism is that when the neural network predicts the output, it only uses parts of the given input instead of the full input. That is where the most relevant information is concentrated and this mechanism only pays \textit{attention} to these parts and the network has to learn what to pay attention to.
 
 Usually in the "sequence-to-sequence" tasks like machine translation there are two main parts of the model an encoder and a decoder. The encoder and the decoder are usually some type of RNN, mostly LSTM. The encoder is responsible for creating a so called context-vector from the input sequence. This context-vector has a fixed length and it serves as the representation of the sequence inside the model. The decoder then decodes this context-vector to a sequence again, in the case of the machine translation this sequence is in a different language. A depiction can be seen at Figure~\ref{fig:seq_to_seq}.
 \begin{figure}[!ht]
@@ -186,18 +186,18 @@ The attention based model is at Figure~\ref{fig:attention}.
 
 
 \section{The graph\_nets library}
-As I mentioned in the previous chapter graph neural networks are used for graph transformation. Recently an article has been published about the types and possible uses of graph neural networks\cite{SurveyGNN}.  Graph neural networks are used on the field of physics\cite{PhysicsGNN}, computer vision\cite{CVGNN} and also NLP\cite{NLPGNN} but they are still not common.\footnote{\url{https://github.com/thunlp/GNNPapers}}
+As I mentioned in the previous chapter graph neural networks are used for graph transformation. Recently an article has been published about the types and possible uses of graph neural networks~\cite{SurveyGNN}.  Graph neural networks are used on the field of physics~\cite{PhysicsGNN}, computer vision~\cite{CVGNN} and also NLP~\cite{NLPGNN} but they are still not common.\footnote{\url{https://github.com/thunlp/GNNPapers}}
 
-My main source for understanding the mechanisms of the graph\_nets library was the article titled \textit{Relational inductive biases, deep learning, and graph networks}\cite{GraphNet} and the \href{https://github.com/deepmind/graph_nets/tree/master/graph_nets/demos}{demos} available on GitHub.
+My main source for understanding the mechanisms of the graph\_nets library was the article titled \textit{Relational inductive biases, deep learning, and graph networks}~\cite{GraphNet} and the \href{https://github.com/deepmind/graph_nets/tree/master/graph_nets/demos}{demos} available on GitHub.
 The article explains the different approaches of graph transformation learning, most importantly the graph independent model and the graph dependent models.
 
 The most notable difference between the two is the fact that while the graph dependent structure uses the data of the nodes and the edges simultaneously, the graph independent model does train the nodes and edges separately from each other.
 
-Both models can be used under different circumstances, but the can also be used together in training processes.
+Both models can be used under different circumstances, but they can also be used together in training processes.
 
 \subsection{Graph Network block}
 
-The graph\_nets library contains three different block type: EdgeBlock, NodeBlock and GlobalBlock. Each responsible for the propagation of the corresponding tensor through the right function. So we can construct different models for edges, nodes and global parameters.
+The graph\_nets library contains three different block types: EdgeBlock, NodeBlock and GlobalBlock, each responsible for the propagation of the corresponding tensor through the right function. So we can construct different models for edges, nodes and global parameters.
 
 \textbox{
 	\textbf{Definitions from the code}
@@ -210,7 +210,7 @@ The graph\_nets library contains three different block type: EdgeBlock, NodeBloc
 	The \textit{GlobalBlock} updates the global features of each graph in a batch based on the previous global features, the aggregated features of the edges of the graph, and the aggregated features of the nodes of the graph.
 }{}
 
-On top of using these graph structure dependent building blocks the GraphNetwork model (or Graph dependent model for the sake of clarity) it utilizes the updated edge features to calculate the node features and these results are used to update the global features.
+On top of using these graph structure dependent building blocks the GraphNetwork model (or Graph dependent model for the sake of clarity) utilizes the updated edge features to calculate the node features and these results are used to update the global features.
 
 \subsection{Graph Independent block}
 As the name suggests, in this block every aspect of the graph is independent from another, the defined update functions only take into account their input tensor which can be the node tensor, the edge tensor or the global tensor.
